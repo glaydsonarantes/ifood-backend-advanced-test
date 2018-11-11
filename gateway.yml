@@ -1,0 +1,47 @@
+server:
+  port: 9092
+
+zuul:
+  host:
+    socket-timeout-millis: 0
+    connect-timeout-millis: 0
+  routes:
+    spotify:
+      path: /spotify/**
+      url: http://localhost:9093
+      #serviceId: spotify-service
+    weather:
+      path: /weather/**
+      url: http://localhost:9094
+      #serviceId: weather-service
+    playlist:
+      path: /playlist/**
+      url: http://localhost:9095
+      #serviceId: playlist-service
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: THREAD
+          thread:
+            timeoutInMilliseconds: 50000
+
+eureka:
+  instance:
+    hostname: localhost
+    port: 9091
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
+  server:
+    wait-time-in-ms-when-sync-empty: 3000
+    
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+  eureka:
+    enabled: true

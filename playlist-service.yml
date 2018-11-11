@@ -1,0 +1,55 @@
+server:
+  port: 9095
+
+eureka:
+  instance:
+    hostname: localhost
+    port: 9091
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
+  server:
+    wait-time-in-ms-when-sync-empty: 3000
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, loggers
+       
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+  eureka:
+    enabled: true
+    
+feign:
+  hystrix:
+    enabled: true
+    errorDecoder: com.ifood.playlist.feign.FeignErrorDecoder
+    
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: THREAD
+          thread:
+            timeoutInMilliseconds: 50000
+
+app:
+  services:
+    spotify:
+      client:
+        url: http://localhost:9092/spotify
+    weather:
+      client:
+        url: http://localhost:9092/weather
+    #weatherservice: weather
+    #spotifyservice: spotify
+  messages:
+    requiredcityname: City name are required
+    requiredlatlon: Lat and lon are required
+    defaulterror: Something went wrong

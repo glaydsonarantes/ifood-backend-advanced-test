@@ -1,0 +1,47 @@
+server:
+  port: 9094
+
+eureka:
+  instance:
+    hostname: localhost
+    port: 9091
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
+  server:
+    wait-time-in-ms-when-sync-empty: 3000
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+  eureka:
+    enabled: true
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, loggers
+    
+feign:
+  hystrix:
+    enabled: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: THREAD
+          thread:
+            timeoutInMilliseconds: 50000
+    
+app:
+  messages:
+    noresults: Sorry. We did not receive results about your city.
+  openweatherapi:
+    apikey: cb3d95fcc1bb1c9692419df8d30dbaea
+    unit: metric
+    url: http://api.openweathermap.org/data/2.5/weather?appid=${app.openweatherapi.apikey}&units=${app.openweatherapi.unit}
